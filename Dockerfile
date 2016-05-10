@@ -21,6 +21,7 @@ RUN service redis-server start && service postgresql start && cd /home/git/gitla
 RUN cd /home/git && sudo -u git -H git clone https://gitlab.com/gitlab-org/gitlab-workhorse.git && cd gitlab-workhorse && git checkout branch-0.7.1 && make
 #silent setup, thanks to athiele (https://github.com/mattias-ohlsson/gitlab-installer/issues/31)
 RUN service redis-server start && service postgresql start && cd /home/git/gitlab && sudo -u git -H bundle exec rake gitlab:setup RAILS_ENV=production force=yes
+RUN service redis-server start && service postgresql start && cd /home/git/gitlab && sudo -u git -H bundle exec rake assets:precompile RAILS_ENV=production
 RUN cp /home/git/gitlab/lib/support/init.d/gitlab /etc/init.d/gitlab && cat /home/git/gitlab/lib/support/nginx/gitlab | sed 's/server_name YOUR_SERVER_FQDN;/server_name $HOSTNAME;/' | tee /etc/nginx/sites-enabled/gitlab && rm -f /etc/nginx/sites-enabled/default
 CMD service redis-server start && service postgresql start && service nginx start && service gitlab start && tail -f /var/log/nginx/*.log
 WORKDIR /home/git
