@@ -5,7 +5,7 @@ EXPOSE 80
 RUN apt update
 RUN apt-get install -y ruby git logrotate libxml2 cmake pkg-config openssl libicu55 python2.7 python-setuptools curl golang postgresql sudo redis-server ruby-dev libicu-dev libpq-dev ruby-execjs nginx
 RUN easy_install pip && pip install pygments
-RUN curl -O http://heanet.dl.sourceforge.net/project/docutils/docutils/0.12/docutils-0.12.tar.gz && gunzip -c docutils-0.12.tar.gz | tar xopf - && cd docutils-0.12 && python setup.py install
+RUN curl -O https://kent.dl.sourceforge.net/project/docutils/docutils/0.13.1/docutils-0.13.1.tar.gz && gunzip -c docutils-0.13.1.tar.gz | tar xopf - && cd docutils-0.13.1 && python setup.py install
 RUN useradd git && mkdir -p /home/git/repositories && chown -R git:git /home/git
 RUN service postgresql start && sudo -u postgres -i psql -d postgres -c "CREATE USER git;" && sudo -u postgres -i psql -d postgres -c "CREATE DATABASE  gitlabhq_production OWNER git;" && sudo -u postgres -i psql -d postgres -c "GRANT ALL PRIVILEGES ON  DATABASE gitlabhq_production to git;" && sudo -u postgres -i psql -d postgres -c "ALTER USER git CREATEDB;" && sudo -u postgres -i psql -d postgres -c "ALTER DATABASE gitlabhq_production owner to git;" && sudo -u postgres -i psql -d postgres -c "ALTER USER git WITH SUPERUSER;"
 RUN cp /etc/redis/redis.conf /etc/redis/redis.conf.bak && sed 's/^port .*/port 0/' /etc/redis/redis.conf.bak | sed 's/# unixsocket/unixsocket/' | sed 's/unixsocketperm 700/unixsocketperm 777/' | tee /etc/redis/redis.conf
