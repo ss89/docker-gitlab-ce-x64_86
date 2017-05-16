@@ -17,8 +17,8 @@ RUN chown -R git:git /var/lib/gems/
 RUN gem install bundler --no-ri --no-rdoc
 RUN gem install therubyrhino
 RUN service redis-server start && service postgresql start && cd /home/git/gitlab && sudo -u git -H bundle install --deployment --without development test mysql aws kerberos
-RUN service redis-server start && service postgresql start && cd /home/git/gitlab && sudo -u git -H bundle exec rake gitlab:shell:install[v2.7.2] REDIS_URL=unix:/tmp/redis.sock RAILS_ENV=production
-RUN cd /home/git && sudo -u git -H git clone https://gitlab.com/gitlab-org/gitlab-workhorse.git && cd gitlab-workhorse && git checkout branch-0.7.1 && make
+RUN service redis-server start && service postgresql start && cd /home/git/gitlab && sudo -u git -H bundle exec rake gitlab:shell:install REDIS_URL=unix:/tmp/redis.sock RAILS_ENV=production
+RUN cd /home/git && sudo -u git -H git clone https://gitlab.com/gitlab-org/gitlab-workhorse.git -b master && cd gitlab-workhorse && make
 #silent setup, thanks to athiele (https://github.com/mattias-ohlsson/gitlab-installer/issues/31)
 RUN service redis-server start && service postgresql start && cd /home/git/gitlab && sudo -u git -H bundle exec rake gitlab:setup RAILS_ENV=production force=yes
 RUN service redis-server start && service postgresql start && cd /home/git/gitlab && sudo -u git -H bundle exec rake assets:precompile RAILS_ENV=production
