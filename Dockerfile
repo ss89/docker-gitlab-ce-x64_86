@@ -1,4 +1,4 @@
-FROM ubuntu:wily
+FROM ubuntu:16.04
 MAINTAINER docker@x2d2.de
 EXPOSE 80
 
